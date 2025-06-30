@@ -11,16 +11,11 @@ load_dotenv()
 st.set_page_config(layout="wide")
 
 # --- Konfiguracja Klientów API ---
-ELEVENLABS_API_KEY = os.getenv("ELEVEN_LABS_API_KEY")
-OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 ELEVENLABS_BASE_URL = "https://api.elevenlabs.io/v1"
 
-# Inicjalizacja klienta OpenAI
-if OPENAI_API_KEY:
-    openai_client = OpenAI(api_key=OPENAI_API_KEY)
-else:
-    st.warning("Klucz OPENAI_API_KEY nie został znaleziony w .env. Generowanie promptu przez AI będzie niemożliwe.")
-    openai_client = None
+# Pobieranie kluczy z .env jako fallback
+ELEVENLABS_API_KEY_ENV = os.getenv("ELEVEN_LABS_API_KEY", "")
+OPENAI_API_KEY_ENV = os.getenv("OPENAI_API_KEY", "")
 
 
 # --- Funkcje API ElevenLabs ---
@@ -285,11 +280,44 @@ def crawl_website(start_url, max_pages):
 st.title("Generator Voicebotów ElevenLabs ze Stron Internetowych")
 st.markdown("Ta aplikacja automatycznie tworzy zaawansowanego agenta konwersacyjnego, wykorzystując treść Twojej strony internetowej oraz AI do generowania jego osobowości.")
 
-available_voices = get_available_voices(ELEVENLABS_API_KEY)
+# --- Sekcja kluczy API ---
+st.subheader("🔑 Konfiguracja API")
+st.markdown("Wprowadź swoje klucze API lub zostaw puste, jeśli są ustawione w pliku .env")
 
-if not available_voices:
-    st.error("Nie udało się załadować głosów z ElevenLabs. Aplikacja nie może kontynuować.")
+col_api1, col_api2 = st.columns(2)
+with col_api1:
+    elevenlabs_api_key = st.text_input(
+        "Klucz API ElevenLabs:", 
+        value=ELEVENLABS_API_KEY_ENV,
+        type="password",
+        help="Twój klucz API z ElevenLabs"
+    )
+with col_api2:
+    openai_api_key = st.text_input(
+        "Klucz API OpenAI:", 
+        value=OPENAI_API_KEY_ENV,
+        type="password",
+        help="Twój klucz API z OpenAI"
+    )
+
+# Inicjalizacja klienta OpenAI z wprowadzonym kluczem
+if openai_api_key:
+    openai_client = OpenAI(api_key=openai_api_key)
+else:
+    st.warning("Klucz OpenAI API nie został wprowadzony. Generowanie promptu przez AI będzie niemożliwe.")
+    openai_client = None
+
+# Sprawdzenie dostępności głosów ElevenLabs
+if elevenlabs_api_key:
+    available_voices = get_available_voices(elevenlabs_api_key)
+    if not available_voices:
+        st.error("Nie udało się załadować głosów z ElevenLabs. Sprawdź swój klucz API.")
+        st.stop()
+else:
+    st.error("Klucz API ElevenLabs nie został wprowadzony. Aplikacja nie może kontynuować.")
     st.stop()
+
+st.divider()
 
 with st.form("voicebot_form"):
     st.subheader("Krok 1: Skonfiguruj Agenta i Scrapowanie")
@@ -350,7 +378,7 @@ if submitted:
                     language_code = LANGUAGE_MAPPING.get(selected_language, "en")
                     
                     agent_id, public_widget_url = create_elevenlabs_agent(
-                        ELEVENLABS_API_KEY,
+                        elevenlabs_api_key,
                         agent_name,
                         system_prompt,
                         selected_voice_id,
