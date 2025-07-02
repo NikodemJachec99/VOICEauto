@@ -162,8 +162,8 @@ def generate_system_prompt_with_gpt(role, tone, scraped_text, language):
     5.  Brak wiedzy: Jeśli odpowiedź nie znajduje się w tekście, bot musi jasno i grzecznie poinformować, że nie posiada takich informacji.
     6.  Zwięzłość: Odpowiedzi powinny być krótkie i na temat nie mogą dotyczyć konkurencji.
     7.  Język odpowiedzi: Bot musi odpowiadać w języku {language}.
-    8.  Długość: Prompt ma być jak najdłuższy mają to byś wszystkie produkty cała oferta firmy 
-
+    8.  Długość: Prompt ma być jak najdłuższy się da mają to byś wszystkie produkty cała oferta firmy 
+    9. Wymyśl na podstawie strony internetowej imie dla voicebota
     Oto tekst bazy wiedzy:
     ---
     {truncated_text}
@@ -173,7 +173,7 @@ def generate_system_prompt_with_gpt(role, tone, scraped_text, language):
     """
     try:
         response = openai_client.chat.completions.create(
-            model="gpt-4o", 
+            model="gpt-o3", 
             messages=[
                 {"role": "system", "content": "Jesteś światowej klasy ekspertem od tworzenia promptów dla AI."},
                 {"role": "user", "content": meta_prompt}
@@ -204,14 +204,14 @@ def generate_first_message_with_gpt(role, tone, language, scraped_text):
     3. Język: {language}
     4. Długość: Maksymalnie 2-3 zdania
     5. Cel: Powitać użytkownika i krótko wyjaśnić, w czym bot może pomóc
-    6. Bazuj na treści strony: {truncated_text[:1000]}...
+    6. Bazuj na treści strony: {truncated_text[:10000]}...
     
     Wygeneruj krótką, przyjazną wiadomość powitalną w języku {language}, którą bot powie jako pierwszą rzecz do użytkownika.
     Nie używaj formatowania markdown ani znaków specjalnych - tylko czysty tekst.
     """
     try:
         response = openai_client.chat.completions.create(
-            model="gpt-4o",
+            model="gpt-o3",
             messages=[
                 {"role": "system", "content": "Jesteś ekspertem od tworzenia przyjaznych wiadomości powitalnych dla botów."},
                 {"role": "user", "content": meta_prompt}
