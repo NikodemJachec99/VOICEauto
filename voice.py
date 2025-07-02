@@ -173,7 +173,7 @@ def generate_system_prompt_with_gpt(role, tone, scraped_text, language):
     """
     try:
         response = openai_client.chat.completions.create(
-            model="gpt-o3", 
+            model="gpt-4o", 
             messages=[
                 {"role": "system", "content": "Jesteś światowej klasy ekspertem od tworzenia promptów dla AI."},
                 {"role": "user", "content": meta_prompt}
