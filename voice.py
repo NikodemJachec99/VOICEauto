@@ -75,7 +75,7 @@ def create_elevenlabs_agent(api_key, agent_name, system_prompt, voice_id, langua
                 "first_message": clean_first_message,
                 "prompt": {
                     "prompt": clean_system_prompt,
-                    "llm": "gpt-4o",  
+                    "llm": "o3",  
                     "built_in_tools": {
             "language_detection": {
               "name": "language_detection",
@@ -211,7 +211,7 @@ def generate_first_message_with_gpt(role, tone, language, scraped_text):
     """
     try:
         response = openai_client.chat.completions.create(
-            model="gpt-o3",
+            model="o3",
             messages=[
                 {"role": "system", "content": "Jesteś ekspertem od tworzenia przyjaznych wiadomości powitalnych dla botów."},
                 {"role": "user", "content": meta_prompt}
