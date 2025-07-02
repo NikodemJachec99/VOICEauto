@@ -4,7 +4,7 @@ from bs4 import BeautifulSoup
 from urllib.parse import urljoin, urlparse
 import os
 from dotenv import load_dotenv
-from openai import OpenAI # <--- NOWY IMPORT
+from openai import OpenAI 
 
 # --- Konfiguracja Aplikacji ---
 load_dotenv()
@@ -75,7 +75,7 @@ def create_elevenlabs_agent(api_key, agent_name, system_prompt, voice_id, langua
                 "first_message": clean_first_message,
                 "prompt": {
                     "prompt": clean_system_prompt,
-                    "llm": "o3",  
+                    "llm": "gpt-4o",  
                     "built_in_tools": {
             "language_detection": {
               "name": "language_detection",
@@ -211,7 +211,7 @@ def generate_first_message_with_gpt(role, tone, language, scraped_text):
     """
     try:
         response = openai_client.chat.completions.create(
-            model="o3",
+            model="gpt-4o",
             messages=[
                 {"role": "system", "content": "Jesteś ekspertem od tworzenia przyjaznych wiadomości powitalnych dla botów."},
                 {"role": "user", "content": meta_prompt}
