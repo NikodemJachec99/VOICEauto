@@ -148,7 +148,7 @@ def generate_system_prompt_with_gpt(role, tone, scraped_text, language):
         return None
 
     # Ograniczamy tekst, żeby nie przekroczyć limitu tokenów
-    truncated_text = scraped_text[:15000]
+    truncated_text = scraped_text[:1500000]
 
     meta_prompt = f"""
     Jesteś ekspertem w tworzeniu promptów systemowych dla voicebotów AI.
@@ -204,7 +204,7 @@ def generate_first_message_with_gpt(role, tone, language, scraped_text):
     3. Język: {language}
     4. Długość: Maksymalnie 2-3 zdania
     5. Cel: Powitać użytkownika i krótko wyjaśnić, w czym bot może pomóc
-    6. Bazuj na treści strony: {truncated_text[:10000]}...
+    6. Bazuj na treści strony: {truncated_text[:100000]}...
     
     Wygeneruj krótką, przyjazną wiadomość powitalną w języku {language}, którą bot powie jako pierwszą rzecz do użytkownika.
     Nie używaj formatowania markdown ani znaków specjalnych - tylko czysty tekst.
