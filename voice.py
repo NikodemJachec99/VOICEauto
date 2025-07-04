@@ -148,7 +148,7 @@ def generate_system_prompt_with_gpt(role, tone, scraped_text, language):
         return None
 
     # Ograniczamy tekst, żeby nie przekroczyć limitu tokenów
-    truncated_text = scraped_text[:1500000]
+    truncated_text = scraped_text[:150000]
 
     meta_prompt = f"""
     Jesteś ekspertem w tworzeniu promptów systemowych dla voicebotów AI.
